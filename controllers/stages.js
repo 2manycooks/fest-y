@@ -47,22 +47,12 @@ router.get("/new", (req, res) => {
 /* Show */
 
 router.get("/:id", (req, res) => {
-    /* db.Stage.findById(req.params.id, (err, foundStage) => {
+    db.Stage.findById(req.params.id, (err, foundStage) => {
         if (err) return res.send(err);
+
         const context = { stages: foundStage };
         res.render("stages/show", context);
-    }); */
-
-
-    db.Stage
-    .findById(req.params.id)
-    .populate("artistsPlaying")
-    .exec((err, foundStage) => {
-        if(err) return res.send(err);
-
-        const context = { stages: foundStage };
-        return res.render("stages/show", context)
-    })
+    });
 });
 
 /* Create */
@@ -70,23 +60,15 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
     db.Stage.create(req.body, (err, createdStage) => {
         if (err) return res.send(err);
-        
-        db.Artist.findById(createdStage.artistsPlaying).exec((err, foundArtist) => {
-            if(err) return res.send(err);
 
-            foundArtist.stagesPlaying.push(createdStage);
-            foundArtist.save();
-
-            return res.redirect("/stages")
-        });
-        
+        return res.redirect("/stages")
     });
+        
 });
-
 /* Edit */
 
 router.get("/:id/edit", (req, res) => {
-    db.Artist.findById(req.params.id, (err, foundStage) => {
+    db.Stage.findById(req.params.id, (err, foundStage) => {
         if (err) return res.send(err);
 
         const context = { stages: foundStage };

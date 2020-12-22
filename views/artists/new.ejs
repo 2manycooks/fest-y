@@ -26,8 +26,19 @@
             Name: <input type="text" name="djName" placeholder="EXCISION" />
             Genre: <input type="text" name="genre" placeholder="DUBSTEP" />
             Top Hits: <input type="text" name="topHits" placeholder="TOP HITS" />
-            PLAYING AT: <input type="text" name="stagesPlaying" placeholder="STAGE">
+<!--             PLAYING AT: <input type="text" name="stagesPlaying" placeholder="STAGE">
+ -->        
+        <p>
+        <select name ='stage'>
+          <option default>Select a Stage</option>
 
+          <% stages.forEach ( stage => { %>
+           <option value="<%= stage._id %>">
+             <%= stage.stageName %>
+           </option>
+          <% }) %>
+         </select>
+        </p>
             <input class="artistSubmit" type="submit" value="Request new Arist">
 
         </form>

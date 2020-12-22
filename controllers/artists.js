@@ -34,11 +34,11 @@ router.get("/", (req, res) => {
 /* New */
 
 router.get("/new", (req, res) => {
-    db.Artist.find({}, (err, foundArtists) => {
+    db.Stage.find({}, (err, foundStages) => {
         if (err) return res.send(err);
 
         const context = {
-            artists: foundArtists,
+            stages: foundStages,
         };
         res.render("artists/new", context)
     })
@@ -88,14 +88,13 @@ router.get("/:id", (req, res) => {
 
 
     db.Artist
-    .findById(req.params.id, (err, foundArtist))
+    .findById(req.params.id)
     .populate("stagesPlaying")
-    .exec((err, foundStage) => {
+    .exec((err, foundArtist) => {
         if(err) return res.send(err);
 
         const context = { 
-            stages: foundStage,
-            artists: foundArtist
+            artists: foundArtist,
          };
         return res.render("artists/show", context)
     })
@@ -107,17 +106,16 @@ router.post("/", (req, res) => {
     db.Artist.create(req.body, (err, createdArtist) => {
         if(err) return res.send(err);
 
-        db.Stage.findById(createdArtist.stagesPlaying).exec((err, foundStage) => {
+        db.Stage.findById(createdArtist.stagesPlaying, function(err, foundStage){
             if(err) return res.send(err);
-
+            console.log(foundStage)
             foundStage.artistsPlaying.push(createdArtist);
             foundStage.save();
 
             return res.redirect("/artists")
         })
-    })
-});
-
+    })    
+})
 /* Edit */
 
 router.get("/:id/edit", (req, res) => {
@@ -153,9 +151,9 @@ router.delete("/:id", (req, res) => {
     db.Artist.findByIdAndDelete(req.params.id, (err, deletedArtist) => {
         if (err) return res.send(err);
 
-        db.Stage.findById(deletedArtist.stagesPlaying, (err, foundStage) => {
+        db.Stage.findById(deletedArtist.stagesPlaying, function(err, foundStage) {
             if(err) return res.send(err);
-
+        
             foundStage.artistsPlaying.remove(deletedArtist);
             foundStage.save();
 
@@ -163,6 +161,7 @@ router.delete("/:id", (req, res) => {
         })
     });
 });
+
 
 /* Export router  */
 module.exports = router;
