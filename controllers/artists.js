@@ -105,15 +105,10 @@ router.get("/:id", (req, res) => {
 router.post("/", (req,res) => {
     db.Artist.create(req.body, (err, createdArtist) => {
             if(err) return res.send(err);
-        db.Stage.find({}).exec( function(err, foundStage){
-            if(err) return res.send(err);
-            console.log(foundStage);
-            console.log(createdArtist)
-            foundStage.artistsPlaying.push(createdArtist);
-            foundStage.save();
-    
-            return res.redirect("/artists");
-        });
+
+            
+
+            return res.redirect("/artists")
     });
             
 });
