@@ -57,13 +57,20 @@ router.get("/:id", (req, res) => {
 
 /* Create */
 
-router.post("/", (req, res) => {
-    db.Stage.create(req.body, (err, createdStage) => {
+router.post("/", async (req, res) => {
+    /* db.Stage.create(req.body, (err, createdStage) => {
         if (err) return res.send(err);
 
+
         return res.redirect("/stages")
-    });
+    }); */
         
+    try {
+        await db.Stage.create(req.body);
+        return res.redirect("/stages")
+    } catch (err) {
+        return res.send(err);
+    }
 });
 /* Edit */
 
@@ -103,6 +110,7 @@ router.delete("/:id", (req, res) => {
         return res.redirect("/stages")
     });
 });
+
 
 /* Export router  */
 module.exports = router;
