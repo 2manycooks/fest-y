@@ -117,17 +117,42 @@ router.put("/:id", function (req, res) {
 /* Delete */
 
 router.delete("/:id", function (req, res) {
-    db.Stage.findByIdAndDelete(req.params.id, function (err, deletedStage) {
+    db.Stage.findByIdAndDelete(req.params.id, function(err, deletedStage) {
+        if(err) return res.send(err);
+
+        db.Artist.remove({stage: deletedStage._id}, function(err, deletedStage) {
+            if(err) return res.send(err);
+
+            return res.redirect("/stages");
+        })
+    })
+    
+    
+    
+    /* db.Stage.findByIdAndDelete(req.params.id, function (err, deletedStage) {
         if (err) return res.send(err);
 
-        db.Artist.remove({ stages: deletedStage._id }, function (err, deletedArtists) {
-            if (err) return res.send(err);
-            return res.redirect("/stages")
-        });
+        db.Artist.findById(deletedStage.artist, function(err, foundArtist) {
+            console.log()
+            foundArtist.stages.remove(deletedStage);
+            foundArtist.save();
+
+            return res.redirect("/stages");
+        })
 
 
-    });
-});
+    }); */
+
+    /* try {
+        const deletedStage = await db.Stage.findByIdAndDelete(req.params.id);
+        await db.Article.remove({stages: deletedStage._id});
+         res.redirect("/stages");
+    } catch(err) {
+         res.send(err);
+         return res.redirect("/stages")
+        
+    } */
+}); 
 
 
 /* Export router  */

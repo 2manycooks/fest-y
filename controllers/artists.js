@@ -87,31 +87,6 @@ router.get("/:id", function (req, res) {
     // });
 
     db.Artist
-<<<<<<< HEAD
-    .findById(req.params.id)
-    .populate("stagesPlaying")
-    .exec((err, foundArtist) => {
-        if(err) return res.send(err);
-
-        const context = { 
-            artists: foundArtist,
-         };
-        return res.render("artists/show", context)
-    })
-}); 
-
-/* Create */
-
-router.post("/", (req,res) => {
-    db.Artist.create(req.body, (err, createdArtist) => {
-            if(err) return res.send(err);
-
-            
-
-            return res.redirect("/artists")
-    });
-            
-=======
         .findById(req.params.id)
         .populate("stage")
         .exec(function (err, foundArtist) {
@@ -143,7 +118,6 @@ router.post("/", (req, res) => {
             return res.redirect("/artists");
         });
     });
->>>>>>> submaster
 });
 
         
@@ -181,22 +155,16 @@ router.put("/:id", (req, res) => {
 /* Delete */
 
 router.delete("/:id", (req, res) => {
-    db.Artist.findByIdAndDelete(req.params.id, (err, deletedArtist) => {
+     db.Artist.findByIdAndDelete(req.params.id, (err, deletedArtist) => {
         if (err) return res.send(err);
 
-<<<<<<< HEAD
-        db.Stage.findById(deletedArtist.stagesPlaying, function(err, foundStage) {
-            if(err) return res.send(err);
-        
-            foundStage.artistsPlaying.remove(deletedArtist);
-=======
         db.Stage.findById(deletedArtist.stage, function (err, foundStage) {
             foundStage.artists.remove(deletedArtist);
->>>>>>> submaster
             foundStage.save();
 
             return res.redirect("/artists")
         });
+
     });
 
 });
