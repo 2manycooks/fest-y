@@ -45,49 +45,49 @@ router.get("/new", (req, res) => {
 })
 
 /* Request */
+
 router.get("/requests", (req, res) => {
-    db.Artist.find({}, (err, foundArtists) => {
+    db.Artist.find({}, (err, allArtists) => {
         if (err) return res.send(err);
 
         const context = {
-            artists: foundArtists
+            artists: allArtists
         };
         res.render("artists/requests", context)
     })
 })
 
 /* Request Show */
-router.get("/requests/:id", (req, res) => {
+router.get("/requests/:id", function (req, res) {
     db.Artist.findById(req.params.id, (err, foundArtist) => {
         if (err) return res.send(err);
         const context = { artists: foundArtist };
         res.render("artists/show", context);
     });
 
+    // db.Artist
+    //     .findById(req.params.id)
+    //     .populate("stage")
+    //     .exec(function (err, foundArtist) {
+    //         if (err) return res.send(err);
+    //         const context = { artists: foundArtist };
+    //         res.render("artists/show", context);
+    //     });
 
-    db.Artist
-    .findById(req.params.id)
-    .populate("stages")
-    .exec((err, foundArtist) => {
-        if(err) return res.send(err);
-
-        const context = { artist: foundArtist };
-        return res.render("artists/show", context)
-    })
 });
 
 
 /* Show */
 
-router.get("/:id", (req, res) => {
-    /* db.Artist.findById(req.params.id, (err, foundArtist) => {
-        if (err) return res.send(err);
-        const context = { artists: foundArtist };
-        res.render("artists/show", context);
-    }); */
-
+router.get("/:id", function (req, res) {
+    // db.Artist.findById(req.params.id, (err, foundArtist) => {
+    //     if (err) return res.send(err);
+    //     const context = { artists: foundArtist };
+    //     res.render("artists/show", context);
+    // });
 
     db.Artist
+<<<<<<< HEAD
     .findById(req.params.id)
     .populate("stagesPlaying")
     .exec((err, foundArtist) => {
@@ -111,6 +111,39 @@ router.post("/", (req,res) => {
             return res.redirect("/artists")
     });
             
+=======
+        .findById(req.params.id)
+        .populate("stage")
+        .exec(function (err, foundArtist) {
+            if (err) return res.send(err);
+            const context = { artists: foundArtist };
+            res.render("artists/show", context);
+        });
+
+});
+
+/* Create */
+
+router.post("/", (req, res) => {
+
+    // db.Artist.create(req.body, (err, createdArtist) => {
+    // if (err) return res.send(err);
+    // return res.redirect("/artists")
+
+    db.Artist.create(req.body, function (err, createdArtist) {
+        if (err) return res.send(err);
+
+
+        db.Stage.findById(createdArtist.stage).exec(function (err, foundStage) {
+            if (err) return res.send(err);
+
+            foundStage.artists.push(createdArtist);
+            foundStage.save();
+
+            return res.redirect("/artists");
+        });
+    });
+>>>>>>> submaster
 });
 
         
@@ -151,15 +184,21 @@ router.delete("/:id", (req, res) => {
     db.Artist.findByIdAndDelete(req.params.id, (err, deletedArtist) => {
         if (err) return res.send(err);
 
+<<<<<<< HEAD
         db.Stage.findById(deletedArtist.stagesPlaying, function(err, foundStage) {
             if(err) return res.send(err);
         
             foundStage.artistsPlaying.remove(deletedArtist);
+=======
+        db.Stage.findById(deletedArtist.stage, function (err, foundStage) {
+            foundStage.artists.remove(deletedArtist);
+>>>>>>> submaster
             foundStage.save();
 
             return res.redirect("/artists")
-        })
+        });
     });
+
 });
 
 

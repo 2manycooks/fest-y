@@ -18,15 +18,19 @@
     <nav class="stageEditNav">
         <a href="/">HOME</a>
         <a href="/stages">STAGES</a>
-        <a href="?????????????">MERCH</a>
+        <a href="/merch">MERCH</a>
     </nav>
 
     <section class="stageEditSection">
         <form class="stageEditForm" action="/stages/<%= stages._id %>?_method=PUT" method="POST">
 
+<<<<<<< HEAD
             STAGE NAME: <input class="editName" type="text" name="djName" placeholder="<%= stages.stageName %> ">
 
             
+=======
+            STAGE NAME: <input class="editName" type="text" name="stageName" placeholder="<%= stages.stageName %> ">
+>>>>>>> submaster
 
             <input class="stagesEditUpdateButton" type="submit" value="Update <%= stages.stageName %>">
         </form>
