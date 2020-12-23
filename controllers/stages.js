@@ -119,32 +119,34 @@ router.put("/:id", function (req, res) {
 
 /* Delete */
 
-router.delete("/:id", function (req, res) {
-    db.Stage.findByIdAndDelete(req.params.id, function(err, deletedStage) {
+router.delete("/:id", (req, res) => {
+    /* db.Stage.findByIdAndDelete(req.params.id, function(err, deletedStage) {
         if(err) return res.send(err);
 
         db.Artist.remove({stage: deletedStage._id}, function(err, deletedStage) {
             if(err) return res.send(err);
 
             return res.redirect("/stages");
-        })
-    })
+        });
+    }); */
     
     
     
-    /* db.Stage.findByIdAndDelete(req.params.id, function (err, deletedStage) {
+    db.Stage.findByIdAndDelete(req.params.id, (err, deletedStage) => {
         if (err) return res.send(err);
 
-        db.Artist.findById(deletedStage.artist, function(err, foundArtist) {
-            console.log()
-            foundArtist.stages.remove(deletedStage);
+        db.Artist.findById(deletedStage.artists, function (err, foundArtist) {
+            console.log(deletedStage);
+            console.log(deletedStage.artists);
+            console.log(foundArtist);
+            console.log(foundArtist.stage);
+            foundArtist.stage.remove(deletedStage);
             foundArtist.save();
 
             return res.redirect("/stages");
-        })
+        });
 
-
-    }); */
+    });
 
     /* try {
         const deletedStage = await db.Stage.findByIdAndDelete(req.params.id);
